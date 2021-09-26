@@ -1,0 +1,11 @@
+<div class="flex flex-col justify-center items-center">
+  <h2 class="text-xl">All restaurants</h2>
+
+  <ul class="mt-4">
+    <% @restaurants.each do |restaurant| %>
+      <li class="text-center mt-4"><%= restaurant['name'] %> <%= restaurant['quiet'] ? '🤫' : '' %></li>
+    <% end %>
+  </ul>
+
+  <span class="<%= @restaurants.count > 0 && 'hidden' %>">No restaurants here yet</span>
+</div>

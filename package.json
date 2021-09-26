@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "@tailwindcss/forms": "^0.3.3",
+    "autoprefixer": "^10.3.6",
+    "postcss": "^8.3.8",
+    "tailwindcss": "^2.2.16"
+  }
+}
