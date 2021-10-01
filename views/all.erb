@@ -3,7 +3,7 @@
 
   <ul class="mt-4">
     <% @restaurants.each do |restaurant| %>
-      <li class="text-center mt-4"><%= restaurant['name'] %> <%= restaurant['quiet'] ? '🤫' : '' %></li>
+      <li class="text-center mt-4"><%= restaurant['name'] %> <%= restaurant['quiet'] ? '🤫' : '' %> <%= restaurant['cheap'] ? '🚫💰' : '' %></li>
     <% end %>
   </ul>
 

@@ -12,6 +12,7 @@
 
  get '/find' do
    restaurants = all_restaurants[JSON_KEY]
+
    if !params['quiet'].nil?
      quiet_restaurants = restaurants.select do |restaurant|
        restaurant['quiet']
@@ -19,6 +20,16 @@
 
      if quiet_restaurants.count > 0
        restaurants = quiet_restaurants
+     end
+   end
+
+   if !params['cheap'].nil?
+     cheap_restaurants = restaurants.select do |restaurant|
+       restaurant['cheap']
+     end
+
+     if cheap_restaurants.count > 0
+       restaurants = cheap_restaurants
      end
    end
 
@@ -38,7 +49,7 @@
 
  post '/create' do
   begin
-    add_restaurant(params['name'], !params['quiet'].nil?)
+    add_restaurant(params['name'], !params['quiet'].nil?, !params['cheap'].nil?)
     redirect '/'
   rescue => e
     puts "Error creating restaurant #{e}"
@@ -46,12 +57,12 @@
   end
  end
 
- def add_restaurant(name, quiet)
+ def add_restaurant(name, quiet, cheap)
    restaurants = all_restaurants
    File.write(FILE_PATH, {
     JSON_KEY => [
       restaurants[JSON_KEY] || [],
-      { 'name' => name, 'quiet': quiet },
+      { 'name' => name, 'quiet': quiet, 'cheap': cheap },
     ].flatten
    }.to_json)
  end
