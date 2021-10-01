@@ -43,7 +43,7 @@
  end
 
  get '/all' do
-   @restaurants = all_restaurants || []
+   @restaurants = (all_restaurants || []).sort_by { |r| r['name'] }
    erb :all
  end
 
