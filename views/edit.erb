@@ -1,0 +1,20 @@
+<div class="flex flex-col justify-center items-center">
+  <h2 class="text-xl">Editing <%= @restaurant['name'] %></h2>
+
+  <form class="w-full md:w-96" action="/update" method="post">
+    <label for="name">Name:</label><br>
+    <input class="rounded w-full border-gray-400" type="text" id="name" name="name" value="<%= @restaurant['name'] %>"><br>
+
+    <div class="mt-4 flex items-center">
+      <input class="rounded checked:bg-indigo-600 checked:border-transparent" type="checkbox" id="quiet" name="quiet" value="yes" <%= @restaurant['quiet'] ? "checked='true'" : "" %>>
+      <label class="ml-2 text-gray-800" for="quiet">This restaurant is quiet 🤫</label>
+    </div>
+
+    <div class="mt-4 flex items-center">
+      <input class="rounded checked:bg-indigo-600 checked:border-transparent" type="checkbox" id="cheap" name="cheap" value="yes" <%= @restaurant['cheap'] ? "checked='true'" : "" %>>
+      <label class="ml-2 text-gray-800" for="cheap">This restaurant is cheap 🚫💰</label>
+    </div>
+
+    <input class="w-full mt-6 bg-indigo-600 text-indigo-100 px-3 py-1 rounded hover:bg-indigo-800 md:w-auto hover:text-white hover:cursor-pointer" type="submit" value="Update restaurant">
+  </form>
+</div>

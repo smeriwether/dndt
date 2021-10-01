@@ -11,7 +11,7 @@
  end
 
  get '/find' do
-   restaurants = all_restaurants[JSON_KEY]
+   restaurants = all_restaurants
 
    if !params['quiet'].nil?
      quiet_restaurants = restaurants.select do |restaurant|
@@ -43,8 +43,13 @@
  end
 
  get '/all' do
-   @restaurants = all_restaurants[JSON_KEY] || []
+   @restaurants = all_restaurants || []
    erb :all
+ end
+
+ get '/edit' do
+   @restaurant = find_restaurant(params['name'])
+   erb :edit
  end
 
  post '/create' do
@@ -57,14 +62,39 @@
   end
  end
 
+ post '/update' do
+  begin
+    update_restaurant(params['name'], !params['quiet'].nil?, !params['cheap'].nil?)
+    redirect '/'
+  rescue => e
+    puts "Error updating restaurant #{e}"
+    redirect '/edit'
+  end
+ end
+
  def add_restaurant(name, quiet, cheap)
    restaurants = all_restaurants
    File.write(FILE_PATH, {
     JSON_KEY => [
-      restaurants[JSON_KEY] || [],
+      restaurants || [],
       { 'name' => name, 'quiet': quiet, 'cheap': cheap },
     ].flatten
    }.to_json)
+ end
+
+ def update_restaurant(name, quiet, cheap)
+   restaurant = find_restaurant(name)
+   other_restaurants = all_restaurants - [restaurant]
+   File.write(FILE_PATH, {
+    JSON_KEY => [
+      other_restaurants || [],
+      { 'name' => name, 'quiet': quiet, 'cheap': cheap },
+    ].flatten
+   }.to_json)
+ end
+
+ def find_restaurant(name)
+   all_restaurants.find { |r| r['name'] == name }
  end
 
  def all_restaurants
@@ -75,7 +105,7 @@
        contents = "{}"
      end
 
-     JSON.parse(contents)
+     JSON.parse(contents)[JSON_KEY]
    ensure
      file.close
    end
