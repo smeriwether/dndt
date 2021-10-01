@@ -33,8 +33,10 @@
      end
    end
 
+   Random.new_seed
    rand = Random.rand(restaurants.count)
    @restaurant = restaurants[rand]
+   @refresh_url = request.env['REQUEST_URI']
    erb :find
  end
 
