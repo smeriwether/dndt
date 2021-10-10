@@ -5,7 +5,14 @@
     <span class="text-3xl font-bold"><%= @restaurant['name'] %></span>
   </div>
 
-  <a class="mt-8 bg-indigo-600 text-indigo-50 py-2 px-3 rounded-full hover:bg-indigo-800 hover:text-white" href="<%= @refresh_url %>">
+  <form method="post" action="/eat" class="mt-8 ">
+    <input type="hidden" name="name" value="<%= @restaurant['name'] %>">
+    <button type="submit" class="bg-indigo-600 text-indigo-50 py-2 px-8 rounded-full hover:bg-indigo-800 hover:text-white">
+      Let's go!
+    </button>
+  </form>
+
+  <a class="mt-8 bg-indigo-100 text-indigo-600 py-2 px-3 rounded-full hover:bg-indigo-200" href="<%= @refresh_url %>">
     We don't want this, pick again
   </a>
 </div>

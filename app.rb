@@ -1,4 +1,5 @@
  require 'sinatra'
+ require 'date'
  require 'pry'
 
  DISK_PATH = ENV.fetch('DISK_PATH', '.')
@@ -11,7 +12,13 @@
  end
 
  get '/find' do
-   restaurants = all_restaurants
+   restaurants = all_restaurants.select do |restaurant|
+    if restaurant['eaten']
+      Date.today > (Date.parse(restaurant['eaten']) + 35)
+    else
+      true
+    end
+   end
 
    if !params['quiet'].nil?
      quiet_restaurants = restaurants.select do |restaurant|
@@ -74,6 +81,16 @@
   end
  end
 
+ post '/eat' do
+  begin
+    eat_at_restaurant(params['name'], Date.today)
+    redirect '/'
+  rescue => e
+    puts "Error updating restaurant #{e}"
+    redirect '/find'
+  end
+ end
+
  def add_restaurant(name, quiet, cheap)
    restaurants = all_restaurants
    File.write(FILE_PATH, {
@@ -84,13 +101,29 @@
    }.to_json)
  end
 
+ def eat_at_restaurant(name, date)
+   restaurant = find_restaurant(name)
+   other_restaurants = all_restaurants - [restaurant]
+   File.write(FILE_PATH, {
+    JSON_KEY => [
+      other_restaurants || [],
+      { 
+        'name' => name, 
+        'quiet': restaurant['quiet'], 
+        'cheap': restaurant['cheap'], 
+        'eaten': date.to_s 
+        },
+    ].flatten
+   }.to_json)
+ end
+
  def update_restaurant(name, quiet, cheap)
    restaurant = find_restaurant(name)
    other_restaurants = all_restaurants - [restaurant]
    File.write(FILE_PATH, {
     JSON_KEY => [
       other_restaurants || [],
-      { 'name' => name, 'quiet': quiet, 'cheap': cheap },
+      { 'name' => name, 'quiet': quiet, 'cheap': cheap, 'eaten': restaurant['eaten'] },
     ].flatten
    }.to_json)
  end
